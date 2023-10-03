@@ -1,4 +1,37 @@
-<h1>Lista de productos</h1>
+<h1>Seccion de productos</h1>
+
+<a href="/api/views"><button>Volver a Home</button></a>
+
+<hr />
+<h2>Crear nuevo producto</h2>
+<form action="/api/products/productoNuevo" method="post">
+  Title:
+  <input type="text" name="title" id="title" />
+  Description:
+  <input type="text" name="description" id="description" />
+  Price:
+  <input type="number" name="price" id="price" />
+  Stock:
+  <input type="number" name="stock" id="stock" />
+  Code:
+  <input type="text" name="code" id="code" />
+  Category:
+  <input type="text" name="category" id="category" />
+  <br />
+  <br />
+  <input type="submit" value="ACEPTAR" />
+</form>
+<hr />
+
+<h2>Lista de productos</h2>
+
 {{#each products}}
-  <h3>{{title}}</h3>
+
+  <h3>{{this.title}}</h3>
+
+  <a href="/api/products/verDetalle/{{this._id}}"><button>Ver en detalle o
+      modificar producto</button></a>
+  <a href="/api/products/delete/{{this._id}}"><button>Eliminar</button></a>
+
 {{/each}}
+<hr />

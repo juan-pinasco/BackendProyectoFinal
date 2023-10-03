@@ -1,0 +1,32 @@
+<h1>Seccion de carrito</h1>
+
+<a href="/api/views"><button>Volver a Home</button></a>
+
+<hr />
+
+<h2>Crear nuevo producto</h2>
+<form action="/api/carts/carritoNuevo" method="post">
+  Title:
+  <input type="text" name="title" id="title" />
+  <br />
+  <br />
+  <input type="submit" value="ACEPTAR" />
+</form>
+
+<hr />
+
+<h2>Lista de carrito</h2>
+
+{{#each carts}}
+
+  <h3>{{this.title}}</h3>
+  <a href="/api/carts/delete/{{this._id}}"><button>Eliminar</button></a>
+  <a href="/api/carts/verDetalle/{{this._id}}"><button>Ver en detalle
+    </button></a>
+
+  {{!-- <a href="/api/products/verDetalle/{{this._id}}"><button>Ver en detalle o
+      modificar producto</button></a>
+  <a href="/api/products/delete/{{this._id}}"><button>Eliminar</button></a> 
+ --}}
+{{/each}}
+<hr />

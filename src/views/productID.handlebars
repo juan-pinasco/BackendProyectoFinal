@@ -1,0 +1,74 @@
+<a href="/api/products"><button>Volver a Products</button></a>
+
+<hr />
+
+<h2>{{product.title}}</h2>
+
+<p>Description:{{product.description}}</p>
+
+<p>Price:{{product.price}}</p>
+
+<p>Stock:{{product.stock}}</p>
+
+<p>Code:{{product.code}}</p>
+
+<p>Category:{{product.category}}</p>
+
+<hr />
+
+<h2>¿Deseas actualizar el producto?</h2>
+
+<form action="/api/products/put/{{product._id}}" method="post">
+  Title:
+  <input
+    type="text"
+    name="title"
+    id="title"
+    placeholder="{{product.title}}"
+    value="{{product.title}}"
+  />
+  Description:
+  <input
+    type="text"
+    name="description"
+    id="description"
+    placeholder="{{product.description}}"
+    value="{{product.description}}"
+  />
+  Price:
+  <input
+    type="number"
+    name="price"
+    id="price"
+    placeholder="{{product.price}}"
+    value="{{product.price}}"
+  />
+  Stock:
+  <input
+    type="number"
+    name="stock"
+    id="stock"
+    placeholder="{{product.stock}}"
+    value="{{product.stock}}"
+  />
+  Code:
+  <input
+    type="text"
+    name="code"
+    id="code"
+    placeholder="{{product.code}}"
+    value="{{product.code}}"
+  />
+  Category:
+  <input
+    type="text"
+    name="category"
+    id="category"
+    placeholder="{{product.category}}"
+    value="{{product.category}}"
+  />
+  <br />
+  <br />
+  <input type="submit" value="ACTUALIZAR" />
+</form>
+<hr />
