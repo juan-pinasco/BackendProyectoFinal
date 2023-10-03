@@ -19,7 +19,11 @@ class CartsManager {
   }
   async findById(id) {
     try {
-      const cart = await cartsModel.findById(id);
+      const cart = await cartsModel
+        .findById(id)
+        .populate(
+          "products" /* ,["title","price"] con products solo me trae todas las propiedades */
+        );
       return cart;
     } catch (error) {
       return error;
