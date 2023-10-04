@@ -12,7 +12,7 @@ router.get("/", async (req, res) => {
     //console.log(products);
     //const products = await productsManager.findAll(limit, page); //CLASE 17
     //se redirija a handlebars "products"
-    //console.log(products);
+    console.log(products);
     res.status(200).render("products", { products });
     //res.status(201).json({ message: "Products", products });
   } catch (error) {

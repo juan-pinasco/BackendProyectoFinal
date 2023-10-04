@@ -25,19 +25,33 @@
 
 <h2>Lista de productos</h2>
 <br />
-<a href="{{products.info.prevLink}}"><button>Pag Anterior</button></a>
-<a href="{{products.info.nextLink}}"><button>Pag Siguiente</button></a>
+<a href="{{products.prevLink}}"><button>Pag Anterior</button></a>
+<a href="{{products.nextLink}}"><button>Pag Siguiente</button></a>
 <a
-  href="http://localhost:8080/api/products?page={{products.info.page}}&limit={{products.info.limit}}&sortPrice=ASC"
+  href="http://localhost:8080/api/products?page={{products.page}}&limit={{products.limit}}&sortPrice=ASC"
 ><button>Precio orden ASC</button></a>
 <a
-  href="http://localhost:8080/api/products?page={{products.info.page}}&limit={{products.info.limit}}&sortPrice=DESC"
+  href="http://localhost:8080/api/products?page={{products.page}}&limit={{products.limit}}&sortPrice=DESC"
 ><button>Precio orden DESC</button></a>
 <br />
 <br />
+<form
+  action="http://localhost:8080/api/products?page={{products.page}}&limit={{products.limit}}&{{products.query}}"
+  method="get"
+>
+  <input
+    type="text"
+    name="category"
+    id="category"
+    placeholder="buscar por categoria"
+  />
+  <input type="submit" value="Buscar" />
+</form>
 <br />
-{{#each products.results}}
-
+<br />
+<br />
+{{!-- {{#each products.results}} --}}
+{{#each products.payload}}
   <h3>{{this.title}}</h3>
   <h4>Precio: {{this.price}}</h4>
 

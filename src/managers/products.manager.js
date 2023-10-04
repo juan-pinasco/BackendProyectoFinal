@@ -24,7 +24,6 @@ class ProductsManager {
       }); //CLASE 18
       const info = {
         status: result.status,
-        //payload: result.totalDocs,
         payload: result.docs,
         totalPages: result.totalPages,
         prevPage: result.prevPage,
@@ -39,11 +38,12 @@ class ProductsManager {
           ? `http://localhost:8080/api/products?page=${result.prevPage}`
           : null,
         limit: result.limit,
+        query,
       };
-      return { info, results: result.docs };
+      //return { info, results: result.docs }; va este
       //return { info, products: product };
       //console.log(info);
-      //return info;
+      return info;
       //return products;
       //return { info, product };
     } catch (error) {
