@@ -6,15 +6,15 @@ const router = Router();
 //---> /api/products
 router.get("/", async (req, res) => {
   try {
-    const products = await productsManager.findAll();
-    if (products.length) {
-      //se redirija a handlebars "products"
-      res.status(200).render("products", { products });
-      /* console.log(products); */
-      /* .json({ message: "Products", products }); */
-    } else {
-      res.status(200).json({ message: "There are no products" });
-    }
+    //const { limit = 10, page = 1 } = req.query; //CLASE 17
+    //const { limit, page, query, sort } = req.query; //CLASE 18
+    const products = await productsManager.findAll(req.query); //CLASE 18
+    //console.log(products);
+    //const products = await productsManager.findAll(limit, page); //CLASE 17
+    //se redirija a handlebars "products"
+    //console.log(products);
+    res.status(200).render("products", { products });
+    //res.status(201).json({ message: "Products", products });
   } catch (error) {
     res.status(500).json({ error });
   }

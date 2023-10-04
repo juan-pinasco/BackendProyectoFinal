@@ -24,10 +24,22 @@
 <hr />
 
 <h2>Lista de productos</h2>
-
-{{#each products}}
+<br />
+<a href="{{products.info.prevLink}}"><button>Pag Anterior</button></a>
+<a href="{{products.info.nextLink}}"><button>Pag Siguiente</button></a>
+<a
+  href="http://localhost:8080/api/products?page={{products.info.page}}&limit={{products.info.limit}}&sortPrice=ASC"
+><button>Precio orden ASC</button></a>
+<a
+  href="http://localhost:8080/api/products?page={{products.info.page}}&limit={{products.info.limit}}&sortPrice=DESC"
+><button>Precio orden DESC</button></a>
+<br />
+<br />
+<br />
+{{#each products.results}}
 
   <h3>{{this.title}}</h3>
+  <h4>Precio: {{this.price}}</h4>
 
   <a href="/api/products/verDetalle/{{this._id}}"><button>Ver en detalle o
       modificar producto</button></a>
