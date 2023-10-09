@@ -1,8 +1,33 @@
-<form action="/api/login" method="post">
+<p>login comun</p>
+<form action="/api/users/postLogin" method="post">
   Username:
   <input type="text" name="username" id="username" />
   Password:
   <input type="password" name="password" id="password" />
-  <br />
   <input type="submit" value="LOGIN" />
 </form>
+<br />
+<p>login con passport local</p>
+<form action="/api/users/postLoginLocal" method="post">
+  Username:
+  <input type="text" name="username" id="username" />
+  Password:
+  <input type="password" name="password" id="password" />
+  <input type="submit" value="LOGIN" />
+</form>
+<br />
+<p>Login con passport github</p>
+<button onclick="location.href=`/api/users/registerGithub`">GITHUB</button>
+<br />
+<br />
+<p>login con JWT</p>
+<form action="/api/jwt" method="post">
+  Username:
+  <input type="text" name="username" id="username" />
+  Password:
+  <input type="password" name="password" id="password" />
+  <input type="submit" value="LOGIN" />
+</form>
+<br />
+<p>¿Quieres registrarte? <a href="/api/users/getRegister">Ingrese aquí</a></p>
+<br />

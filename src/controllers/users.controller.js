@@ -1,0 +1,66 @@
+import {
+  findUser,
+  createUser,
+  hashData,
+  compareData,
+} from "../services/users.service.js";
+
+//LOGIN
+export const getLogin = async (req, res) => {
+  res.status(200).render("login");
+};
+
+export const postLogin = async (req, res) => {
+  const { username, password } = req.body;
+  if ((!username, !password)) {
+    //si no puso todos los datos requeridos... le digo que se requieren mas datos
+    return res.status(400).json({ message: "Required data is missing" });
+  }
+  const userDB = await findUser(username);
+  if (!userDB) {
+    //si el usuario no existe... le digo que debe ir a registrarse
+    return res.status(400).json({ message: "You most register first" });
+  }
+  const isPasswordValid = await compareData(password, userDB.password);
+  if (!isPasswordValid) {
+    // Si al comparar la contraseñas de req.body y la ya guardada al registrarse en la base de datos, SON DISTINTAS... le digo contraseña incorrecta.
+    return res.status(401).json({ message: "Password not vaild" });
+  }
+  //Si al comparar las contraseñas salio todo bien, inicio session
+  req.session[`username`] = username;
+  res.send("probando session");
+};
+
+//REGISTER
+export const getRegister = async (req, res) => {
+  res.status(200).render("register");
+};
+
+export const postRegister = async (req, res) => {
+  const { first_name, last_name, username, password } = req.body;
+  if ((!first_name, !last_name, !username, !password)) {
+    //si no puso todos los datos reuqeridos... le digo que se requieren mas datos
+    return res.status(400).json({ message: "Required data is missing" });
+  }
+  const userDB = await findUser(username);
+  if (userDB) {
+    //si el usuario ya existe... le digo que el username ya esta usado por otro
+    return res.status(400).json({ message: "Username already used" });
+  }
+  //si llego hasta aca es por que todo ya salio bien y me va a hashear la contraseña, para luego guardar usuario en DB.
+  const hashPassword = await hashData(password);
+  const newUser = await createUser({ ...req.body, password: hashPassword });
+  res.status(200).redirect("/api/users/getLogin");
+  //res.status(200).json({ message: "User created", user: newUser });
+};
+
+//cerrar sesion
+export const cerrarSesion = async (req, res) => {
+  req.session.destroy((err) => {
+    if (err)
+      return res
+        .status(500)
+        .send({ status: "error", error: "no pudo cerrar sesion" });
+    res.status(200).render("login");
+  });
+};

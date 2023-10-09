@@ -1,5 +1,4 @@
 import { Router } from "express";
-import { productsManager } from "../DAL/products.manager.js";
 
 const router = Router();
 
