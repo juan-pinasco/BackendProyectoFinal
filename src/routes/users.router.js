@@ -5,15 +5,19 @@ import {
   getRegister,
   postRegister,
   cerrarSesion,
+  findUserRole,
+  deleteUserRole,
+  findAll,
 } from "../controllers/users.controller.js";
 import passport from "passport";
 import { findUserID } from "../services/users.service.js";
+import { authMiddleware } from "../middlewares/auth.middleware.js";
 
 const router = Router();
 
 //login
 router.get("/getLogin", getLogin);
-router.post("/postLogin", postLogin); // va a una pagina que aparece escrito "probando session" como dice en la formula. NO renderiza ninguna pagina, lo deje asi. Es el login comun.
+router.post("/postLogin", postLogin);
 
 //register
 router.get("/getRegister", getRegister);
@@ -21,6 +25,9 @@ router.post("/postRegister", postRegister);
 
 //cerrar sesion
 router.get("/logout", cerrarSesion);
+
+//All users
+router.get("/allUsers", findAll);
 
 //passport local
 router.post(
@@ -57,4 +64,8 @@ router.get(
   })
 );
 
+//role
+router.get("/:username", /* authMiddleware("pre") ,*/ findUserRole);
+
+router.get("/deleteUser/:username", authMiddleware("admin"), deleteUserRole);
 export default router;

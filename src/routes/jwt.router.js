@@ -1,7 +1,7 @@
 import { Router } from "express";
-import { usersManager } from "../DAL/users.manager.js";
+import { usersManager } from "../DAL/DAOs/users.manager.js";
 import { generateToken } from "../utils.js";
-import { compareData } from "../services/users.service.js";
+import { compareData } from "../utils.js";
 import { jwtValidation } from "../middlewares/jwt.middleware.js";
 //import passport from "passport"; //Lo usamos con passport JWT
 const router = Router();

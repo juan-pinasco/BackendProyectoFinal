@@ -1,10 +1,10 @@
 import passport from "passport";
-import { usersModel } from "../db/models/users.model.js";
-import { usersManager } from "../DAL/users.manager.js";
+import { usersModel } from "../DAL/db/models/users.model.js";
+import { usersManager } from "../DAL/DAOs/users.manager.js";
 import { Strategy as LocalStrategy } from "passport-local";
 import { Strategy as GithubStrategy } from "passport-github2";
+import { compareData } from "../utils.js";
 //import { ExtractJwt, Strategy as JWTStrategy } from "passport-jwt"; //lo usamos para passport JWT
-import { compareData } from "../services/users.service.js";
 
 //const JWT_SECRET_KEY = "secretJWT"; //lo usamos para passport JWT
 

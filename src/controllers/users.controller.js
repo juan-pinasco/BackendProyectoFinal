@@ -1,9 +1,10 @@
 import {
   findUser,
   createUser,
-  hashData,
-  compareData,
+  deleteUser,
+  findUserAll,
 } from "../services/users.service.js";
+import { hashData, compareData } from "../utils.js";
 
 //LOGIN
 export const getLogin = async (req, res) => {
@@ -17,6 +18,7 @@ export const postLogin = async (req, res) => {
     return res.status(400).json({ message: "Required data is missing" });
   }
   const userDB = await findUser(username);
+  //console.log(userDB);
   if (!userDB) {
     //si el usuario no existe... le digo que debe ir a registrarse
     return res.status(400).json({ message: "You most register first" });
@@ -28,7 +30,11 @@ export const postLogin = async (req, res) => {
   }
   //Si al comparar las contraseñas salio todo bien, inicio session
   req.session[`username`] = username;
-  res.send("probando session");
+  const role = userDB.role;
+  req.session[`role`] = role;
+  //req.user = userDB;
+  //res.send("probando session");
+  res.status(200).render("loginComun", { userDB });
 };
 
 //REGISTER
@@ -37,8 +43,8 @@ export const getRegister = async (req, res) => {
 };
 
 export const postRegister = async (req, res) => {
-  const { first_name, last_name, username, password } = req.body;
-  if ((!first_name, !last_name, !username, !password)) {
+  const { first_name, last_name, username, password, role } = req.body;
+  if ((!first_name, !last_name, !username, !password, !role)) {
     //si no puso todos los datos reuqeridos... le digo que se requieren mas datos
     return res.status(400).json({ message: "Required data is missing" });
   }
@@ -63,4 +69,39 @@ export const cerrarSesion = async (req, res) => {
         .send({ status: "error", error: "no pudo cerrar sesion" });
     res.status(200).render("login");
   });
+};
+
+//role
+export const findUserRole = (req, res) => {
+  const { username } = req.params;
+  try {
+    const user = findUser(username);
+    if (!user) return res.status(404).json({ message: "User not found" });
+    res.status(200).json({ message: "User found", user });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const deleteUserRole = async (req, res) => {
+  const { username } = req.params;
+  try {
+    const user = await deleteUser(username);
+    if (!user) return res.status(404).json({ message: "User not found" });
+    res.status(200).json({ message: "usuario borrado", user });
+  } catch (error) {
+    res.status(500).json({ message: "error.message " });
+  }
+};
+
+//buscar todo los usuarios
+export const findAll = async (req, res) => {
+  try {
+    const users = await findUserAll();
+    //console.log(req.session);
+    res.status(200).render("todosUsuarios", { users });
+    //res.status(201).json({ message: "todos los usuarios", users });
+  } catch (error) {
+    res.status(500).json({ error });
+  }
 };
