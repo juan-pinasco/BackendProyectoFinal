@@ -1,9 +1,9 @@
 import passport from "passport";
 import { usersModel } from "../DAL/db/models/users.model.js";
-import { usersManager } from "../DAL/DAOs/users.manager.js";
 import { Strategy as LocalStrategy } from "passport-local";
 import { Strategy as GithubStrategy } from "passport-github2";
 import { compareData } from "../utils.js";
+import { createUser, findUser } from "../services/users.service.js";
 //import { ExtractJwt, Strategy as JWTStrategy } from "passport-jwt"; //lo usamos para passport JWT
 
 //const JWT_SECRET_KEY = "secretJWT"; //lo usamos para passport JWT
@@ -13,7 +13,7 @@ passport.use(
   new LocalStrategy(async function (username, password, done) {
     try {
       // vamos a ir abuscar a la base de datos si ese usuario existe con lo que me llego (con username, sin password)
-      const userDB = await usersManager.findUser(username);
+      const userDB = await findUser(username);
       if (!userDB) {
         return done(null, false);
       }
@@ -39,7 +39,7 @@ passport.use(
     },
     async function (accessToken, refreshToken, profile, done) {
       try {
-        const userDB = await usersManager.findUser(profile.username);
+        const userDB = await findUser(profile.username);
         //login
         //si ese user viene de github o no
         if (userDB) {
@@ -60,7 +60,7 @@ passport.use(
           isAdmin: false,
           fromGithub: true,
         };
-        const result = await usersManager.create(newUser);
+        const result = await createUser(newUser);
         return done(null, result);
       } catch (error) {
         done(error);
@@ -85,8 +85,8 @@ passport.use(
 ); */
 
 //user => id
-passport.serializeUser((usuario, done) => {
-  done(null, usuario._id);
+passport.serializeUser((usuarios, done) => {
+  done(null, usuarios._id);
 });
 
 //id => user

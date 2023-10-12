@@ -51,11 +51,15 @@ router.post("/", async (req, res) => {
       return res.status(401).json({ message: "Password not vaild" });
     }
     //Si al comparar las contraseñas salio todo bien, genero token con datos del usuario en COOKIES(para mayor seguridad) y los mando a db
+    req.session[`username`] = username;
+    const role = userDB.role;
+    req.session[`role`] = role;
     const token = generateToken(userDB);
     res
       .status(200)
       .cookie("token", token)
-      .json({ message: "Token generated", token });
+      //.json({ message: "Token generated", token });
+      .render("profile", { userDB });
   } catch (error) {
     res.status(500).json({ message: error });
   }

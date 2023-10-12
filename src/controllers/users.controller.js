@@ -32,9 +32,8 @@ export const postLogin = async (req, res) => {
   req.session[`username`] = username;
   const role = userDB.role;
   req.session[`role`] = role;
-  //req.user = userDB;
-  //res.send("probando session");
-  res.status(200).render("loginComun", { userDB });
+  res.status(200).render("profile", { userDB });
+  //console.log(req.session);
 };
 
 //REGISTER
@@ -72,12 +71,13 @@ export const cerrarSesion = async (req, res) => {
 };
 
 //role
-export const findUserRole = (req, res) => {
+export const findUserRole = async (req, res) => {
   const { username } = req.params;
   try {
-    const user = findUser(username);
+    const user = await findUser(username);
     if (!user) return res.status(404).json({ message: "User not found" });
-    res.status(200).json({ message: "User found", user });
+    //res.status(200).json({ message: "User found", user });
+    res.status(200).redirect(postLogin);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -88,7 +88,8 @@ export const deleteUserRole = async (req, res) => {
   try {
     const user = await deleteUser(username);
     if (!user) return res.status(404).json({ message: "User not found" });
-    res.status(200).json({ message: "usuario borrado", user });
+    //res.status(200).json({ message: "usuario borrado", user });
+    res.status(200).redirect("/api/users/allUsers");
   } catch (error) {
     res.status(500).json({ message: "error.message " });
   }

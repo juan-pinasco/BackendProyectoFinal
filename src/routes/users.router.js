@@ -10,7 +10,7 @@ import {
   findAll,
 } from "../controllers/users.controller.js";
 import passport from "passport";
-import { findUserID } from "../services/users.service.js";
+import { findUser } from "../services/users.service.js";
 import { authMiddleware } from "../middlewares/auth.middleware.js";
 
 const router = Router();
@@ -33,21 +33,17 @@ router.get("/allUsers", findAll);
 router.post(
   "/postLoginLocal",
   passport.authenticate("Login", { failureRedirect: "/api/users/getLogin" }),
-  function (req, res) {
-    res.redirect("/api/users/adminOrClient");
+  async (req, res) => {
+    /* req.session.user = req.user;
+    res.render("profile", { userDB: req.user }); */
+    const { username } = req.body;
+    const userDB = await findUser(username);
+    req.session[`username`] = username;
+    const role = userDB.role;
+    req.session[`role`] = role;
+    res.status(200).render("profile", { userDB });
   }
 );
-
-//views con passport local
-router.get("/adminOrClient", async (req, res) => {
-  const { user } = req.session.passport;
-  const userDB = await findUserID(user);
-  if (userDB.isAdmin) {
-    res.status(200).render("adminHome");
-  } else {
-    res.status(200).render("clientHome");
-  }
-});
 
 //github
 router.get(
@@ -60,8 +56,12 @@ router.get(
   "/github",
   passport.authenticate("github", {
     failureRedirect: "/api/users/getLogin",
-    successRedirect: "/api/users/adminOrClient",
-  })
+  }),
+  async (req, res) => {
+    req.session.user = req.user;
+    res.render("profile", { userDB: req.user });
+  }
+  //successRedirect: "/api/users/adminOrClient",
 );
 
 //role
