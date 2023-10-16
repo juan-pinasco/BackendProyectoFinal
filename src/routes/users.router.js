@@ -12,6 +12,7 @@ import {
 import passport from "passport";
 import { findUser } from "../services/users.service.js";
 import { authMiddleware } from "../middlewares/auth.middleware.js";
+import UsersDto from "../DAL/DTOs/users.dto.js";
 
 const router = Router();
 
@@ -27,7 +28,8 @@ router.post("/postRegister", postRegister);
 router.get("/logout", cerrarSesion);
 
 //All users
-router.get("/allUsers", findAll);
+//router.get("/allUsers", findAll);
+router.get("/postLogin/current/allUsers", findAll);
 
 //passport local
 router.post(
@@ -37,11 +39,16 @@ router.post(
     /* req.session.user = req.user;
     res.render("profile", { userDB: req.user }); */
     const { username } = req.body;
-    const userDB = await findUser(username);
-    req.session[`username`] = username;
+    const user = await findUser(username);
+    /*   req.session[`username`] = username;
     const role = userDB.role;
-    req.session[`role`] = role;
-    res.status(200).render("profile", { userDB });
+    req.session[`role`] = role; */
+    req.session.user = {
+      username: user.username,
+      role: user.role,
+    };
+    //console.log(req.session.userDB);
+    res.status(200).render("profile", { user });
   }
 );
 
@@ -59,7 +66,15 @@ router.get(
   }),
   async (req, res) => {
     req.session.user = req.user;
-    res.render("profile", { userDB: req.user });
+    /*  req.session.user = {
+      username: user.username,
+      role: user.role,
+    }; */
+    //console.log(req.session.userDB);
+    // req.user = req.session.userDB;
+    //console.log(req.user);
+    res.render("profile", { user: req.user });
+    //res.render("profile", { user });
   }
   //successRedirect: "/api/users/adminOrClient",
 );
@@ -68,4 +83,10 @@ router.get(
 router.get("/:username", /* authMiddleware("pre") ,*/ findUserRole);
 
 router.get("/deleteUser/:username", authMiddleware("admin"), deleteUserRole);
+
+//Current para login comun
+router.get("/postLogin/current", (req, res) => {
+  const userDto = new UsersDto(req.session.user);
+  res.status(200).render("profile", { user: userDto });
+});
 export default router;

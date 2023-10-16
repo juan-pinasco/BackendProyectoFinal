@@ -10,10 +10,10 @@ const cartsSchema = new mongoose.Schema({
     ref: "users",
   },
 
-  title: {
+  /*  title: {
     type: String,
     required: true,
-  },
+  }, */
   products: [
     {
       product: { type: mongoose.Schema.Types.ObjectId, ref: "products" },

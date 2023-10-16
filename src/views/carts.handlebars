@@ -6,11 +6,9 @@
 
 <h2>Crear nuevo carrito</h2>
 <form action="/api/carts/carritoNuevo" method="post">
-  Title:
-  <input type="text" name="title" id="title" />
   <br />
   <br />
-  <input type="submit" value="ACEPTAR" />
+  <input type="submit" value="crear carrito" />
 </form>
 
 <hr />
@@ -19,7 +17,7 @@
 
 {{#each carts}}
 
-  <h3>{{this.title}}</h3>
+  <h3>{{this._id}}</h3>
   <a href="/api/carts/delete/{{this._id}}"><button>Eliminar</button></a>
   <a href="/api/carts/verDetalle/{{this._id}}"><button>Ver en detalle
     </button></a>

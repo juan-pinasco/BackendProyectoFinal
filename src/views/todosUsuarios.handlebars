@@ -1,7 +1,9 @@
+<a href="/api/users/postLogin/current"><button>volver</button></a>
+<br />
+<br />
 {{#each users}}
   <h3>Name: {{name}}</h3>
   <p>Username: {{username}}</p>
   <p>ROL: {{role}}</p>
   <a href="/api/users/deleteUser/{{username}}"><button>Eliminar Usuario</button></a>
 {{/each}}
-<br />

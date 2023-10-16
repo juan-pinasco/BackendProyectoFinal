@@ -9,12 +9,13 @@ import {
 export const getCarts = async (req, res) => {
   try {
     const carts = await findAll();
-    if (carts.length) {
+    res.status(200).render("carts", { carts });
+    /* if (carts.length) {
       //se redirija a handlebars "carts"
       res.status(200).render("carts", { carts });
     } else {
       res.status(200).json({ message: "There are no products" });
-    }
+    } */
   } catch (error) {
     res.status(500).json({ error });
   }
@@ -37,16 +38,15 @@ export const getCartById = async (req, res) => {
 };
 
 export const createCart = async (req, res) => {
-  //const { products, price, quantity } = req.body;
-  const { title } = req.body;
-  //if (!products || !price || !quantity)
+  /*   const { title } = req.body;
   if (!title) {
     return res.status(400).json({ message: "Some data is missing" });
-  }
+  } */
   try {
     const newCart = await create(req.body);
+    //const newCart = await create();
+    //res.status(200).json({ mesagge: newCart });
     res.status(200).redirect("/api/carts");
-    //res.status(200).json({ message: "carrito creado", mesagge: newCart });
   } catch (error) {
     res.status(500).json({ error });
   }

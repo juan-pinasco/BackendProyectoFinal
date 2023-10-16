@@ -10,8 +10,10 @@ class CartsManager {
     }
   }
   async createOne(obj) {
+    //async createOne() {
     try {
       const newCart = await cartsModel.create(obj);
+      //const newCart = await cartsModel.create();
       return newCart;
     } catch (error) {
       return error;

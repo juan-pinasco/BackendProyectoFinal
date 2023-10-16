@@ -17,23 +17,31 @@ export const postLogin = async (req, res) => {
     //si no puso todos los datos requeridos... le digo que se requieren mas datos
     return res.status(400).json({ message: "Required data is missing" });
   }
-  const userDB = await findUser(username);
-  //console.log(userDB);
-  if (!userDB) {
+  const user = await findUser(username);
+  if (!user) {
     //si el usuario no existe... le digo que debe ir a registrarse
     return res.status(400).json({ message: "You most register first" });
   }
-  const isPasswordValid = await compareData(password, userDB.password);
+  const isPasswordValid = await compareData(password, user.password);
   if (!isPasswordValid) {
     // Si al comparar la contraseñas de req.body y la ya guardada al registrarse en la base de datos, SON DISTINTAS... le digo contraseña incorrecta.
     return res.status(401).json({ message: "Password not vaild" });
   }
   //Si al comparar las contraseñas salio todo bien, inicio session
-  req.session[`username`] = username;
+  req.session.user = {
+    name: user.name,
+    username: user.username,
+    password: user.password,
+    fromGithub: user.fromGithub,
+    role: user.role,
+    carts: user.carts,
+  };
+  //console.log(req.session.user);
+  /* req.session[`username`] = username;
   const role = userDB.role;
-  req.session[`role`] = role;
-  res.status(200).render("profile", { userDB });
-  //console.log(req.session);
+  req.session[`role`] = role; */
+  //res.status(200).render("profile", { user });
+  res.status(200).redirect("/api/users/postLogin/current");
 };
 
 //REGISTER
@@ -77,7 +85,7 @@ export const findUserRole = async (req, res) => {
     const user = await findUser(username);
     if (!user) return res.status(404).json({ message: "User not found" });
     //res.status(200).json({ message: "User found", user });
-    res.status(200).redirect(postLogin);
+    res.status(200).redirect("/api/users/postLogin");
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -89,7 +97,7 @@ export const deleteUserRole = async (req, res) => {
     const user = await deleteUser(username);
     if (!user) return res.status(404).json({ message: "User not found" });
     //res.status(200).json({ message: "usuario borrado", user });
-    res.status(200).redirect("/api/users/allUsers");
+    res.status(200).redirect("/api/users/postLogin/current/allUsers");
   } catch (error) {
     res.status(500).json({ message: "error.message " });
   }

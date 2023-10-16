@@ -4,7 +4,7 @@ import cartsRouter from "./routes/carts.router.js";
 import viewsRouter from "./routes/views.router.js"; //handlebars
 import { __dirname } from "./utils.js";
 import "./DAL/db/dbConfigs.js";
-//import cookieParser from "cookie-parser"; //Importamos cookie parse
+import cookieParser from "cookie-parser"; //Importamos cookie parse
 import usersRouter from "./routes/users.router.js";
 import jwtRouter from "./routes/jwt.router.js";
 import session from "express-session";
@@ -36,7 +36,7 @@ app.set("view engine", "handlebars");
 app.set("views", __dirname + "/views");
 
 //cookies
-//app.use(cookieParser())
+app.use(cookieParser());
 
 //sessions    LO COMENTE PARA QUE ME FUNCIONE JWT
 app.use(
@@ -48,7 +48,7 @@ app.use(
     secret: "secretSession",
     resave: false,
     saveUninitialized: false,
-    //cookie: { maxAge: 10000 },
+    cookie: { maxAge: 60000 },
   })
 );
 
