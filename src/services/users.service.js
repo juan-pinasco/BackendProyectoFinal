@@ -1,5 +1,6 @@
 import { usersManager } from "../DAL/DAOs/users.manager.js";
 import UsersDto from "../DAL/DTOs/users.dto.js";
+import UserRegisterDto from "../DAL/DTOs/userRegister.dto.js";
 
 // buscar todos los usuarios
 export const findUserAll = async () => {
@@ -8,7 +9,7 @@ export const findUserAll = async () => {
 };
 
 export const createUser = async (obj) => {
-  const userDTO = new UsersDto(obj);
+  const userDTO = new UserRegisterDto(obj);
   const response = await usersManager.createOne(userDTO);
   return response;
 };
