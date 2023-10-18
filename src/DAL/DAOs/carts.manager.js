@@ -24,7 +24,7 @@ class CartsManager {
       const cart = await cartsModel
         .findById(id)
         .populate(
-          "products" /* ,["title","price"] con products solo, me trae todas las propiedades */
+          "products.product" /* ,["title","price"] con products solo, me trae todas las propiedades */
         );
       return cart;
     } catch (error) {

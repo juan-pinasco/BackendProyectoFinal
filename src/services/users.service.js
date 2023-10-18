@@ -1,5 +1,4 @@
 import { usersManager } from "../DAL/DAOs/users.manager.js";
-import UsersDto from "../DAL/DTOs/users.dto.js";
 import UserRegisterDto from "../DAL/DTOs/userRegister.dto.js";
 
 // buscar todos los usuarios
