@@ -54,6 +54,7 @@ export const addProductToCart = async (cid, pid, quantity) => {
     cart.totalAmount += product.price * quantity;
     // Guardar el carrito actualizado en la base de datos
     await cart.save();
+    await cartsManager.findById(cid);
     return cart;
   } catch (error) {
     throw new Error(error.message);
@@ -67,7 +68,6 @@ export const calculateTotalAmount = async (cart) => {
       throw new Error("Cart not found");
     }
     let totalAmount = 0;
-
     for (const productInfo of cart.products) {
       const product = await productsManager.findById(productInfo.product);
       if (product) {
@@ -77,7 +77,6 @@ export const calculateTotalAmount = async (cart) => {
 
     cart.totalAmount = totalAmount;
     await cart.save(cart);
-
     return cart;
   } catch (error) {
     throw new Error("Error");

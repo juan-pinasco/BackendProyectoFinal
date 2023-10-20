@@ -73,9 +73,11 @@ export const addProductToCartController = async (req, res) => {
   const { cid, pid, quantity } = req.body;
   try {
     const updatedCart = await addProductToCart(cid, pid, quantity);
+    const cartPopulate = await updatedCart.populate("products.product");
     res
       .status(200)
-      .json({ message: "Product added to cart", cart: updatedCart });
+      //.json({ message: "Product added to cart", cart: updatedCart });
+      .json({ message: "Product added to cart", cart: cartPopulate });
   } catch (error) {
     res.status(500).json({ message: "error al agregar producto" });
   }
