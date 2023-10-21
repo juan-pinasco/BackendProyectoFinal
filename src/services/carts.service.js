@@ -1,5 +1,4 @@
 import { cartsManager } from "../DAL/DAOs/carts.manager.js";
-import { productsManager } from "../DAL/DAOs/products.manager.js";
 import { productsModel } from "../DAL/db/models/products.model.js";
 
 export const findAll = async () => {
@@ -58,27 +57,5 @@ export const addProductToCart = async (cid, pid, quantity) => {
     return cart;
   } catch (error) {
     throw new Error(error.message);
-  }
-};
-
-//calculateTotalAmount
-export const calculateTotalAmount = async (cart) => {
-  try {
-    if (!cart) {
-      throw new Error("Cart not found");
-    }
-    let totalAmount = 0;
-    for (const productInfo of cart.products) {
-      const product = await productsManager.findById(productInfo.product);
-      if (product) {
-        totalAmount += product.price * productInfo.quantity;
-      }
-    }
-
-    cart.totalAmount = totalAmount;
-    await cart.save(cart);
-    return cart;
-  } catch (error) {
-    throw new Error("Error");
   }
 };

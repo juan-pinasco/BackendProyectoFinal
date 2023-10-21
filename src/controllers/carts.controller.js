@@ -2,14 +2,11 @@ import {
   findAll,
   create,
   findById,
-  //update,
   deleteOne,
   addProductToCart,
-  calculateTotalAmount,
 } from "../services/carts.service.js";
-import { productsManager } from "../DAL/DAOs/products.manager.js";
-import { generateUniqueCode } from "../codeGenerator.js";
-import { createTicket } from "../services/tickets.service.js";
+import { cartsModel } from "../DAL/db/models/carts.model.js";
+import { ticketModel } from "../DAL/db/models/tickets.model.js";
 
 export const getCarts = async (req, res) => {
   try {
@@ -87,46 +84,56 @@ export const addProductToCartController = async (req, res) => {
 export const generateTicket = async (req, res) => {
   const cartId = req.params.cid;
   try {
-    const cart = await findById(cartId);
-    if (!cart) {
-      return res.status(404).json({ error: "Cart not found" });
-    }
+    const cart = await cartsModel.findById(cartId).populate("products.product"); // Obtener el carrito con los detalles de los productos
+    const productsToPurchase = cart.products; // Productos en el carrito
     const productsNotPurchased = [];
-    // Recorremos los productos en el carrito y verificamos stock
-    for (const productInfo of cart.products) {
-      const product = await productsManager.findById(productInfo.product);
-      if (!product) {
-        return res.status(404).json({ error: "Product not found" });
-      }
-      if (product.stock < productInfo.quantity) {
-        productsNotPurchased.push(productInfo.product);
-        continue;
-      } else {
-        product.stock -= productInfo.quantity;
+    //console.log(cart.products);
+    for (const item of productsToPurchase) {
+      const product = item.product;
+      const quantityToBuy = item.quantity;
+      if (product.stock >= quantityToBuy) {
+        // Si hay suficiente stock, restarlo del inventario y continuar
+        product.stock -= quantityToBuy;
         await product.save();
+      } else {
+        // Si no hay suficiente stock, agregarlo a la lista de productos no comprados
+        productsNotPurchased.push({
+          productId: product._id.toString(),
+          message:
+            "No hay suficiente stock del producto para la cantidad solicitada",
+          //quantity: (product.stock -= quantityToBuy),
+        });
       }
     }
-    cart.productsNotPurchased = productsNotPurchased;
-
-    await calculateTotalAmount(cart);
-
-    // Ticket con los datos de la compra
-    const ticketData = {
-      code: generateUniqueCode(),
-      purchase_datetime: new Date(),
+    // Crear el ticket con los detalles de la compra
+    const ticket = new ticketModel({
+      code: generateUniqueCode(), // Función para generar un código único
       amount: cart.totalAmount,
-      purchaser: "JUAN",
-    };
-    const ticket = await createTicket(ticketData);
-
+    });
+    await ticket.save();
+    // Actualizar el carrito con los productos no comprados
+    cart.products = cart.products.filter((item) => {
+      const productNotPurchased = productsNotPurchased.find(
+        (p) => p.productId === item.product._id.toString()
+      );
+      if (productNotPurchased) {
+        item.quantity -= productNotPurchased.quantity;
+        return true;
+      }
+      return false;
+    });
     await cart.save();
-
-    res.status(201).json({
-      message: "buy success",
-      ticket,
-      notPurchasedProducts: productsNotPurchased,
+    res.json({
+      TicketId: ticket._id,
+      productsNotPurchased,
     });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error(error);
+    res.status(500).json({ error: "Error al procesar la compra." });
   }
 };
+
+// Función para generar un código único para el ticket
+function generateUniqueCode() {
+  return Math.random().toString(36).substr(2, 9);
+}
