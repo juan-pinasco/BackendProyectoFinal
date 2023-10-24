@@ -12,6 +12,7 @@ import MongoStore from "connect-mongo";
 import passport from "passport";
 import "./passport/passportStrategies.js";
 import config from "./config.js";
+import mocksRouter from "./routes/mocks.router.js";
 
 //
 //El modulo que tuve que instalar de handlebars para que me tomara los objetos
@@ -62,6 +63,7 @@ app.use("/api/products", productsRouter);
 app.use("/api/carts", cartsRouter);
 app.use("/api/users", usersRouter);
 app.use("/api/jwt", jwtRouter); //JWT
+app.use("/api/mockingproducts", mocksRouter); //mocks
 
 //puerto
 const PORT = config.port;
