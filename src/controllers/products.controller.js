@@ -5,17 +5,21 @@ import {
   update,
   deleteOne,
 } from "../services/products.service.js";
+//import NotFoundDocumentError from "../errors/CustomError.js"; //manejo de errores
+import CustomError from "../errors/CustomError.js"; //manejo de errores
+import { ErrorMessages } from "../errors/error.enum.js"; //manejo de errores
 
 //---> /api/products
 export const getProducts = async (req, res) => {
-  try {
-    const products = await findAll(req.query);
-    //se redirija a handlebars "products"
-    res.status(200).render("products", { products });
-    //res.status(201).json({ message: "Products", products });
-  } catch (error) {
-    res.status(500).json({ error });
-  }
+  //try {
+  const products = await findAll(req.query);
+  //se redirija a handlebars "products"
+  res.status(200).render("products", { products });
+  //res.status(201).json({ message: "Products", products });
+  //} catch /* (error) */ {
+  CustomError.createError(ErrorMessages.PRODUCT_NOT_FOUND);
+  //res.status(500).json({ error });
+  //}
 };
 
 //---> /api/products/verDetalle/:pid
