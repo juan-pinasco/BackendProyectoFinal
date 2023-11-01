@@ -12,7 +12,7 @@ import MongoStore from "connect-mongo";
 import passport from "passport";
 import "./passport/passportStrategies.js";
 import config from "./config.js";
-
+import { logger } from "./winston.js"; //logger
 //
 //El modulo que tuve que instalar de handlebars para que me tomara los objetos
 import { allowInsecurePrototypeAccess } from "@handlebars/allow-prototype-access";
@@ -62,11 +62,19 @@ app.use("/api/products", productsRouter);
 app.use("/api/carts", cartsRouter);
 app.use("/api/users", usersRouter);
 app.use("/api/jwt", jwtRouter); //JWT
+//loggger winston
+app.get("/loggerTest", (req, res) => {
+  logger.fatal("fatal"),
+    logger.error("error"),
+    logger.warning("warning"),
+    logger.info("info"),
+    logger.http("http"),
+    logger.debug("debug"),
+    res.send("Logger winston");
+});
 
 //puerto
 const PORT = config.port;
 app.listen(PORT, () => {
-  console.log(`escuchando al puerto ${PORT}`);
+  logger.info(`escuchando al puerto ${PORT}`);
 });
-
-//console.log(process.env);
