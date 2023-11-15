@@ -12,6 +12,8 @@ import MongoStore from "connect-mongo";
 import passport from "passport";
 import "./passport/passportStrategies.js";
 import config from "./config.js";
+import swaggerJSDoc from "swagger-jsdoc";
+import swaggerUiExpress from "swagger-ui-express";
 
 //
 //El modulo que tuve que instalar de handlebars para que me tomara los objetos
@@ -63,10 +65,22 @@ app.use("/api/carts", cartsRouter);
 app.use("/api/users", usersRouter);
 app.use("/api/jwt", jwtRouter); //JWT
 
+//swagger
+const swaggerOptions = {
+  definition: {
+    openapi: "3.0.1",
+    info: {
+      title: "Documentacion api",
+      description: "API para clase de swagger",
+    },
+  },
+  apis: [`${__dirname}/docs/**/*.yaml`],
+};
+const specs = swaggerJSDoc(swaggerOptions);
+app.use(`/apidocs`, swaggerUiExpress.serve, swaggerUiExpress.setup(specs));
+
 //puerto
 const PORT = config.port;
 app.listen(PORT, () => {
   console.log(`escuchando al puerto ${PORT}`);
 });
-
-//console.log(process.env);
