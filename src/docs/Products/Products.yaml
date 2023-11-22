@@ -1,5 +1,152 @@
 paths:
   /api/products/:
     get:
-      summary: Obtener todo los productos
-      tags: -Productos
+      summary: Me renderiza la pagina "products" de hanldebars con lista de productos y la posibilidad de crear, eliminar y modificar.
+      tags:
+        - Products
+      responses:
+        "200":
+          description: Operacion realizada con exito
+        "500":
+          description: Error interno
+  /api/products/verDetalle/:pid:
+    get:
+      summary: Me renderiza la pagina "productsID" de hanldebars con el producto seleccionado y la posibilidad de modificarlo.
+      tags:
+        - Products
+      parameters:
+        - name: id
+          in: path
+          description: id del producto
+          required: true
+          schema:
+            type: string
+      responses:
+        "400":
+          description: Operacion realizada con exito pero id invalido o inexistente
+        "200":
+          description: Operacion realizada con exito
+        "500":
+          description: Error interno
+  /api/products/productoNuevo:
+    post:
+      summary: Me renderiza la pagina "products" handlebars nuevamente, por que es como si me recargara la pagina con el nuevo producto creado.
+      tags:
+        - Products
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#components/requestBodies/producto"
+      responses:
+        "400":
+          description: Los datos que pusiste no son correctos
+        "200":
+          description: Operacion realizada con exito
+        "500":
+          description: Error interno
+  /api/products/put/:pid:
+    post:
+      summary: Me ACTUALIZA producto y renderiza la pagina "productsID" de hanldebars con el producto ya modificado, y la posibilidad de seguir modificandolo.
+      tags:
+        - Products
+      parameters:
+        - name: id
+          in: path
+          description: id del producto
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#components/requestBodies/producto"
+      responses:
+        "200":
+          description: Operacion realizada con exito
+        "500":
+          description: Error interno
+  /api/products/delete/:pid:
+    get:
+      summary: Me ELIMINA producto y renderiza la pagina "products" de hanldebars con el producto ya eliminado.
+      tags:
+        - Products
+      parameters:
+        - name: id
+          in: path
+          description: id del producto
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Operacion realizada con exito
+        "500":
+          description: Error interno
+
+components:
+  schemas:
+    Products:
+      type: object
+      properties:
+        _id:
+          type: objectId
+          description: Id del producto autogenerado por bd
+        title:
+          type: string
+          description: titulo de producto
+        description:
+          type: string
+          description: descripcion del producto
+        price:
+          type: number
+          description: precio del producto
+        stock:
+          type: number
+          description: stock del producto
+        code:
+          type: string
+          description: codigo del producto
+        category:
+          type: string
+          description: categoria del producto
+      example:
+        _id: ObjectId('652dc5c5589e95d8f6843899')
+        title: Producto 1
+        description: probando producto 1
+        price: 80000
+        stock: 74
+        code: 1a
+        category: prueba
+  requestBodies:
+    producto:
+      type: object
+      properties:
+        title:
+          type: string
+          description: titulo de producto
+        description:
+          type: string
+          description: descripcion del producto
+        price:
+          type: number
+          description: precio del producto
+        stock:
+          type: number
+          description: stock del producto
+        code:
+          type: string
+          description: codigo del producto
+        category:
+          type: string
+          description: categoria del producto
+      example:
+        title: Producto 1
+        description: probando producto 1
+        price: 80000
+        stock: 74
+        code: 1a
+        category: prueba

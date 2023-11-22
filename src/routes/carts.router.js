@@ -25,7 +25,7 @@ router.get("/delete/:cid", deleteCart);
 //agregar productos al carrito
 router.post(
   "/agregarProducto",
-  authMiddleware("user"),
+  /* authMiddleware("user"), */
   addProductToCartController
 );
 

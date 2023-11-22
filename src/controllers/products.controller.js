@@ -25,7 +25,7 @@ export const getProductById = async (req, res) => {
     const product = await findById(pid);
     /*  console.log(product); */
     if (!product) {
-      res.status(200).json({ message: "Invalid ID" });
+      res.status(400).json({ message: "Invalid ID" });
     } else {
       /* res.status(200).json({ message: "Product", product }); */
       //render quiere decir que me rendiriza la pagina de handlebars "productID"

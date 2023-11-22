@@ -1,0 +1,84 @@
+paths:
+  /api/carts/:
+    get:
+      summary: Me renderiza la pagina "carts" de hanldebars con lista de productos y la posibilidad de crear, eliminar y modificar.
+      tags:
+        - Carts
+      responses:
+        "200":
+          description: Operacion realizada con exito
+        "500":
+          description: Error interno
+  /api/carts/verDetalle/:cid:
+    get:
+      summary: Me renderiza la pagina "cartsID" de hanldebars con su detalle.
+      tags:
+        - Carts
+      parameters:
+        - name: id
+          in: path
+          description: id del carrito
+          required: true
+          schema:
+            type: string
+      responses:
+        "400":
+          description: Operacion realizada con exito pero id invalido o inexistente
+        "200":
+          description: Operacion realizada con exito
+        "500":
+          description: Error interno
+  /api/carts/carritoNuevo:
+    post:
+      summary: Me renderiza la pagina "carts" handlebars nuevamente, por que es como si me recargara la pagina con el nuevo carrito creado.
+      tags:
+        - Carts
+      responses:
+        "200":
+          description: Operacion realizada con exito
+        "500":
+          description: Error interno
+  /api/carts/delete/:cid:
+    get:
+      summary: Me ELIMINA el carrito y renderiza la pagina "carts" de hanldebars con el carrito ya eliminado.
+      tags:
+        - Carts
+      parameters:
+        - name: id
+          in: path
+          description: id del carrito
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Operacion realizada con exito
+        "500":
+          description: Error interno
+
+components:
+  schemas:
+    carts:
+      type: object
+      properties:
+        _id:
+          type: objectId
+          description: Id del carrito autogenerado por bd
+        products:
+          type: array
+          description: array producto
+          product:
+            type: objectId
+            description: id de producto
+          quantity:
+            type: number
+            description: cantidad del producto
+        totalAmount:
+          type: number
+          description: monto total
+      example:
+        _id: ObjectId('652dc5c5589e95d8f6843899')
+        products:
+          product: 652dc5c5589e95d8f6843899
+          quantity: 5
+        totalAmount: 40
